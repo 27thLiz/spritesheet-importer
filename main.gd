@@ -1,9 +1,11 @@
+tool
 extends Node2D
 
 const WHITE = Color(1, 1, 1)
 
 onready var start = get_node("StartPos").get_pos()
 onready var rect = Rect2(start, Vector2(size_x, size_y))
+var tileset = preload("res://stoneblocks.png")
 var TILESIZE = 96
 var rows = 2
 var columns = 5
@@ -15,6 +17,7 @@ var draw_perm = false
 var currentSelection = Rect2()
 var permanentSelection = Rect2()
 var tiles = {}
+var dir
 
 func _ready():
 	update()
@@ -23,7 +26,7 @@ func _ready():
 	set_process_input(true)
 	for x in range(columns):
 		for y in range(rows):
-			tiles[Vector2(x, y)] = Rect2(Vector2(start.x + x * TILESIZE, start.y + y * TILESIZE), Vector2(TILESIZE, TILESIZE))
+			tiles[Vector2(x, y)] = Rect2(Vector2(x * TILESIZE, y * TILESIZE), Vector2(TILESIZE, TILESIZE))
 	pass
 
 
@@ -62,11 +65,32 @@ func _draw():
 		draw_box(permanentSelection, Color(0.4, 1, 0.7))
 
 func draw_box(rect, color):
-	var upright = Vector2(rect.pos.x + TILESIZE, rect.pos.y)
-	var downleft = Vector2(rect.pos.x, rect.end.y)
+	var pos = start + rect.pos
+	var end = start + rect.end
+	var upright = Vector2(pos.x + TILESIZE, pos.y)
+	var downleft = Vector2(pos.x, end.y)
 	#var downright = Vector2(.x + TILESIZE, rect.pos.y + TILESIZE)
 	
-	draw_line(rect.pos, downleft, color)
-	draw_line(rect.pos, upright, color)
-	draw_line(downleft, rect.end, color)
-	draw_line(upright, rect.end, color)
+	draw_line(pos, downleft, color)
+	draw_line(pos, upright, color)
+	draw_line(downleft, end, color)
+	draw_line(upright, end, color)
+
+func _on_Import_released():
+	var count = 0
+	for key in tiles:
+		var rect = tiles[key]
+		var tex = AtlasTexture.new()
+		tex.set_name(str(count))
+		tex.set_atlas(tileset)
+		tex.set_region(rect)
+		ResourceSaver.save(dir + "/" + str(count)+".atex", tex)
+		count += 1
+		
+
+func _on_path_button_pressed():
+	get_node("FileDialog").show()
+
+func _on_FileDialog_confirmed():
+	dir = get_node("FileDialog").get_current_dir()
+	get_node("Label").set_text("Path: " + dir)
