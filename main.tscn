@@ -27,10 +27,11 @@ __meta__ = { "__editor_plugin_screen__":"2D", "_edit_lock_":true }
 
 [node name="View" type="Sprite" parent="."]
 
+visibility/visible = false
 visibility/behind_parent = true
 material/material = SubResource( 2 )
-transform/pos = Vector2( 262, 219 )
-transform/scale = Vector2( 1, 1 )
+transform/pos = Vector2( 22, 123 )
+centered = false
 
 [node name="StartPos" type="Position2D" parent="."]
 
@@ -176,8 +177,8 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 range/min = 0.0
-range/max = 100.0
-range/step = 1.0
+range/max = 512.0
+range/step = 2.0
 range/page = 0.0
 range/value = 32.0
 range/exp_edit = false
@@ -211,8 +212,8 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 range/min = 0.0
-range/max = 100.0
-range/step = 1.0
+range/max = 512.0
+range/step = 2.0
 range/page = 0.0
 range/value = 32.0
 range/exp_edit = false
@@ -329,7 +330,7 @@ focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
 popup/exclusive = false
-window/title = "Save a File"
+window/title = "Open a File"
 dialog/hide_on_ok = false
 script/script = SubResource( 4 )
 
