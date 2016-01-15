@@ -1,0 +1,358 @@
+[gd_scene load_steps=6 format=1]
+
+[ext_resource path="res://main.gd" type="Script" id=1]
+
+[sub_resource type="CanvasItemShaderGraph" id=1]
+
+_code = { "fragment":"", "fragment_ofs":0, "light":"", "light_ofs":0, "vertex":"", "vertex_ofs":0 }
+_data = { "shaders":[ [ 0, 33, Vector2( 437, 10 ), null, null, [  ] ], [ 0, 33, Vector2( 289, 38 ), null, null, [  ], 1, 0, Vector2( 113, 31 ), null, null, [  ] ], [ 0, 33, Vector2( 250, 20 ), null, null, [  ] ] ] }
+
+[sub_resource type="CanvasItemMaterial" id=2]
+
+shader/shader = SubResource( 1 )
+shader/shading_mode = 0
+
+[sub_resource type="GDScript" id=3]
+
+script/source = "\nextends FileDialog\n\n# member variables here, example:\n# var a=2\n# var b=\"textvar\"\n\nfunc _ready():\n\t# Initialization here\n\tset_mode(MODE_OPEN_DIR)\n\tpass\n\n\n"
+
+[sub_resource type="GDScript" id=4]
+
+script/source = "\nextends FileDialog\n\nfunc _ready():\n\tset_mode(MODE_OPEN_FILE)\n\n\n\n"
+
+[node name="Node2D" type="Node2D"]
+
+script/script = ExtResource( 1 )
+__meta__ = { "__editor_plugin_screen__":"2D", "_edit_lock_":true }
+
+[node name="View" type="Sprite" parent="."]
+
+visibility/behind_parent = true
+material/material = SubResource( 2 )
+transform/pos = Vector2( 262, 219 )
+transform/scale = Vector2( 1, 1 )
+
+[node name="StartPos" type="Position2D" parent="."]
+
+transform/pos = Vector2( 22, 123 )
+
+[node name="Import" type="Button" parent="."]
+
+margin/left = 532.0
+margin/top = 135.0
+margin/right = 589.0
+margin/bottom = 165.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+toggle_mode = false
+click_on_press = true
+text = "import"
+flat = false
+
+[node name="rows" type="SpinBox" parent="."]
+
+margin/left = 77.0
+margin/top = 38.0
+margin/right = 139.0
+margin/bottom = 61.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+range/min = 1.0
+range/max = 100.0
+range/step = 1.0
+range/page = 0.0
+range/value = 2.0
+range/exp_edit = false
+range/rounded = false
+editable = true
+prefix = ""
+suffix = ""
+
+[node name="columns" type="SpinBox" parent="."]
+
+margin/left = 76.0
+margin/top = 73.0
+margin/right = 138.0
+margin/bottom = 96.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+range/min = 1.0
+range/max = 100.0
+range/step = 1.0
+range/page = 0.0
+range/value = 2.0
+range/exp_edit = false
+range/rounded = false
+editable = true
+prefix = ""
+suffix = ""
+
+[node name="rowlabel" type="Label" parent="."]
+
+margin/left = 12.0
+margin/top = 44.0
+margin/right = 52.0
+margin/bottom = 57.0
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+text = "Rows:"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="columnlabel" type="Label" parent="."]
+
+margin/left = 11.0
+margin/top = 77.0
+margin/right = 64.0
+margin/bottom = 90.0
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+text = "Columns:"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="Label" type="Label" parent="."]
+
+margin/left = 175.0
+margin/top = 11.0
+margin/right = 215.0
+margin/bottom = 24.0
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+text = "Path: "
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="path_button" type="Button" parent="."]
+
+margin/left = 96.0
+margin/top = 8.0
+margin/right = 156.0
+margin/bottom = 27.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+toggle_mode = false
+text = "set path"
+flat = false
+
+[node name="FileDialog" type="FileDialog" parent="."]
+
+visibility/visible = false
+margin/left = 181.0
+margin/top = 35.0
+margin/right = 732.0
+margin/bottom = 314.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+popup/exclusive = false
+window/title = "Choose a path"
+dialog/hide_on_ok = true
+script/script = SubResource( 3 )
+
+[node name="tilesize_x" type="SpinBox" parent="."]
+
+margin/left = 225.0
+margin/top = 40.0
+margin/right = 287.0
+margin/bottom = 63.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+range/min = 0.0
+range/max = 100.0
+range/step = 1.0
+range/page = 0.0
+range/value = 32.0
+range/exp_edit = false
+range/rounded = false
+editable = true
+prefix = ""
+suffix = ""
+
+[node name="sizelabel_x" type="Label" parent="."]
+
+margin/left = 153.0
+margin/top = 43.0
+margin/right = 213.0
+margin/bottom = 56.0
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+text = "Tile Width:"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="tilesize_y" type="SpinBox" parent="."]
+
+margin/left = 225.0
+margin/top = 76.0
+margin/right = 287.0
+margin/bottom = 99.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+range/min = 0.0
+range/max = 100.0
+range/step = 1.0
+range/page = 0.0
+range/value = 32.0
+range/exp_edit = false
+range/rounded = false
+editable = true
+prefix = ""
+suffix = ""
+
+[node name="sizelabel_y" type="Label" parent="."]
+
+margin/left = 153.0
+margin/top = 79.0
+margin/right = 218.0
+margin/bottom = 92.0
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+text = "Tile Height:"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="spacing_label" type="Label" parent="."]
+
+margin/left = 307.0
+margin/top = 42.0
+margin/right = 372.0
+margin/bottom = 55.0
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+text = "spacing:"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="spacing" type="SpinBox" parent="."]
+
+margin/left = 379.0
+margin/top = 39.0
+margin/right = 441.0
+margin/bottom = 62.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+range/min = 0.0
+range/max = 100.0
+range/step = 1.0
+range/page = 0.0
+range/value = 0.0
+range/exp_edit = false
+range/rounded = false
+editable = true
+prefix = ""
+suffix = ""
+
+[node name="margin" type="SpinBox" parent="."]
+
+margin/left = 379.0
+margin/top = 80.0
+margin/right = 441.0
+margin/bottom = 103.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+range/min = 0.0
+range/max = 100.0
+range/step = 1.0
+range/page = 0.0
+range/value = 0.0
+range/exp_edit = false
+range/rounded = false
+editable = true
+prefix = ""
+suffix = ""
+
+[node name="margin_label" type="Label" parent="."]
+
+margin/left = 306.0
+margin/top = 83.0
+margin/right = 371.0
+margin/bottom = 96.0
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+text = "margin:"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="load_button" type="Button" parent="."]
+
+margin/left = 6.0
+margin/top = 8.0
+margin/right = 82.0
+margin/bottom = 27.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+toggle_mode = false
+text = "load tileset"
+flat = false
+
+[node name="TilesetDialog" type="FileDialog" parent="."]
+
+visibility/visible = false
+margin/right = 514.0
+margin/bottom = 355.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+popup/exclusive = false
+window/title = "Save a File"
+dialog/hide_on_ok = false
+script/script = SubResource( 4 )
+
+[connection signal="released" from="Import" to="." method="_on_Import_released"]
+
+[connection signal="value_changed" from="rows" to="." method="_on_rows_value_changed"]
+
+[connection signal="value_changed" from="columns" to="." method="_on_columns_value_changed"]
+
+[connection signal="pressed" from="path_button" to="." method="_on_path_button_pressed"]
+
+[connection signal="confirmed" from="FileDialog" to="." method="_on_FileDialog_confirmed"]
+
+[connection signal="value_changed" from="tilesize_x" to="." method="_on_tilesize_x_value_changed"]
+
+[connection signal="value_changed" from="tilesize_y" to="." method="_on_tilesize_y_value_changed"]
+
+[connection signal="value_changed" from="spacing" to="." method="_on_spacing_value_changed"]
+
+[connection signal="value_changed" from="margin" to="." method="_on_margin_value_changed"]
+
+[connection signal="pressed" from="load_button" to="." method="_on_load_pressed"]
+
+[connection signal="confirmed" from="TilesetDialog" to="." method="_on_TilesetDialog_confirmed"]
+
+
