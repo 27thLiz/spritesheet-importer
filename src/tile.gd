@@ -18,11 +18,18 @@ func _input(event):
 	if event.type == InputEvent.MOUSE_BUTTON and !event.is_pressed():
 		clicked = true
 
+func deselect():
+	selected = false
+
 func _fixed_process(delta):
 	if clicked:
 		clicked = false
 		if mouseover:
 			selected = !selected
+			if (selected):
+				get_node("../..").requestSelection(self)
+			else:
+				get_node("../..").deselect()
 	update()
 
 func _draw():

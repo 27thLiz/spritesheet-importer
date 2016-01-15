@@ -334,6 +334,82 @@ window/title = "Open a File"
 dialog/hide_on_ok = false
 script/script = SubResource( 4 )
 
+[node name="CurrentTilePanel" type="Panel" parent="."]
+
+visibility/visible = false
+margin/left = 465.0
+margin/top = 24.0
+margin/right = 611.0
+margin/bottom = 111.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+__meta__ = { "_editor_collapsed":true }
+
+[node name="Label" type="Label" parent="CurrentTilePanel"]
+
+margin/right = 78.0
+margin/bottom = 13.0
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+text = "Selected Tile:"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="TileName" type="TextEdit" parent="CurrentTilePanel"]
+
+margin/left = 41.0
+margin/top = 23.0
+margin/right = 145.0
+margin/bottom = 46.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+
+[node name="nameLabel" type="Label" parent="CurrentTilePanel"]
+
+margin/top = 28.0
+margin/right = 35.0
+margin/bottom = 41.0
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+text = "name"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="TileImport" type="CheckBox" parent="CurrentTilePanel"]
+
+margin/left = 41.0
+margin/top = 51.0
+margin/right = 67.0
+margin/bottom = 73.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+toggle_mode = true
+flat = false
+align = 0
+
+[node name="ImportLabel" type="Label" parent="CurrentTilePanel"]
+
+margin/top = 56.0
+margin/right = 35.0
+margin/bottom = 69.0
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+text = "import"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
 [connection signal="released" from="Import" to="." method="_on_Import_released"]
 
 [connection signal="value_changed" from="rows" to="." method="_on_rows_value_changed"]
@@ -355,5 +431,9 @@ script/script = SubResource( 4 )
 [connection signal="pressed" from="load_button" to="." method="_on_load_pressed"]
 
 [connection signal="confirmed" from="TilesetDialog" to="." method="_on_TilesetDialog_confirmed"]
+
+[connection signal="text_changed" from="CurrentTilePanel/TileName" to="." method="_on_TileName_text_changed"]
+
+[connection signal="toggled" from="CurrentTilePanel/TileImport" to="." method="_on_import_toggled"]
 
 

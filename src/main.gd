@@ -2,9 +2,6 @@ tool
 extends Node2D
 
 const WHITE = Color(1, 1, 1)
-const TILE_RECT = 0
-const TILE_NAME = 1
-const TILE_SKIP = 2
 
 onready var start = get_node("StartPos")
 onready var startpos = start.get_pos()
@@ -12,7 +9,7 @@ onready var rect = Rect2(startpos, Vector2(size_x, size_y))
 onready var TilesetDiag = get_node("TilesetDialog")
 onready var PathDiag = get_node("FileDialog")
 var tilescene = preload("res://tile.tscn")
-var tileset = preload("res://stoneblocks.png")
+var tileset
 var tilesize_x = 96
 var tilesize_y = 96
 var rows = 2
@@ -21,12 +18,8 @@ var spacing = 0
 var margin = 0
 var size_x = columns * tilesize_x
 var size_y = rows * tilesize_y
-var clicked = false
-var draw_curr = false
-var draw_perm = false
 var have_tileset = false
-var currentSelection = {}
-var permanentSelection = {}
+var currentSelection
 var tiles = {}
 var dir
 var base_name = ""
@@ -34,6 +27,18 @@ var line_width = 1.0
 func _ready():
 	TilesetDiag.set_mode(TilesetDiag.MODE_OPEN_FILE)
 	pass
+
+func requestSelection(tile):
+	if currentSelection != null:
+		currentSelection.deselect()
+	currentSelection = tile
+	get_node("CurrentTilePanel").show()
+	get_node("CurrentTilePanel/TileName").set_text(tile.name)
+	get_node("CurrentTilePanel/TileImport").set_pressed(!tile.skip)
+
+func deselect():
+	currentSelection = null
+	get_node("CurrentTilePanel").hide()
 
 func _on_Import_released():
 	for tile in start.get_children():
@@ -115,3 +120,13 @@ func _on_TilesetDialog_confirmed():
 	print(base_name)
 	makeTiles()
 	have_tileset = true
+
+
+func _on_import_toggled( pressed ):
+	if (currentSelection != null):
+		currentSelection.skip = !pressed
+
+
+func _on_TileName_text_changed():
+	if currentSelection != null:
+		currentSelection.name = get_node("CurrentTilePanel/TileName").get_text()
