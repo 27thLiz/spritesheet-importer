@@ -37,21 +37,6 @@ centered = false
 
 transform/pos = Vector2( 22, 123 )
 
-[node name="Import" type="Button" parent="."]
-
-margin/left = 532.0
-margin/top = 135.0
-margin/right = 589.0
-margin/bottom = 165.0
-focus/ignore_mouse = false
-focus/stop_mouse = true
-size_flags/horizontal = 2
-size_flags/vertical = 2
-toggle_mode = false
-click_on_press = true
-text = "import"
-flat = false
-
 [node name="rows" type="SpinBox" parent="."]
 
 margin/left = 77.0
@@ -323,8 +308,10 @@ flat = false
 [node name="TilesetDialog" type="FileDialog" parent="."]
 
 visibility/visible = false
-margin/right = 514.0
-margin/bottom = 355.0
+margin/left = 38.0
+margin/top = 88.0
+margin/right = 552.0
+margin/bottom = 443.0
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -409,8 +396,6 @@ text = "import"
 percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
-
-[connection signal="released" from="Import" to="." method="_on_Import_released"]
 
 [connection signal="value_changed" from="rows" to="." method="_on_rows_value_changed"]
 

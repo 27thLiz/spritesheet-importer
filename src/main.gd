@@ -10,10 +10,10 @@ onready var TilesetDiag = get_node("TilesetDialog")
 onready var PathDiag = get_node("FileDialog")
 var tilescene = preload("res://tile.tscn")
 var tileset
-var tilesize_x = 96
-var tilesize_y = 96
+var tilesize_x = 32
+var tilesize_y = 32
 var rows = 2
-var columns = 5
+var columns = 2
 var spacing = 0
 var margin = 0
 var size_x = columns * tilesize_x
@@ -40,7 +40,9 @@ func deselect():
 	currentSelection = null
 	get_node("CurrentTilePanel").hide()
 
-func _on_Import_released():
+func import():
+	if (dir == null or dir == ""):
+		return
 	for tile in start.get_children():
 		if tile.skip:
 			continue
@@ -49,6 +51,7 @@ func _on_Import_released():
 		tex.set_atlas(tileset)
 		tex.set_region(tile.rect)
 		ResourceSaver.save(dir + "/" + tile.name + ".atex", tex)
+		
 
 func deleteTiles():
 	for tile in start.get_children():
