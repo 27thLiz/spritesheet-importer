@@ -4,27 +4,25 @@
 
 [sub_resource type="GDScript" id=1]
 
-script/source = "tool\nextends ConfirmationDialog\n\nfunc _ready():\n\tshow()\n\nfunc _on_plugin_confirmed():\n\tget_node(\"main\").import()\n"
+script/source = "tool\nextends AcceptDialog\n\nfunc _ready():\n\tshow()\n\nfunc _on_plugin_confirmed():\n\tget_node(\"main\").import()\n"
 
-[node name="plugin" type="ConfirmationDialog"]
+[node name="plugin" type="AcceptDialog"]
 
 margin/left = 3.0
 margin/top = 27.0
-margin/right = 655.0
-margin/bottom = 522.0
+margin/right = 878.0
+margin/bottom = 657.0
 focus/ignore_mouse = true
 focus/stop_mouse = false
 size_flags/horizontal = 2
 size_flags/vertical = 2
 popup/exclusive = false
-window/title = "Please Confirm..."
+window/title = "Spritesheet to AtlasTexture Importer"
 dialog/hide_on_ok = true
 script/script = SubResource( 1 )
-__meta__ = { "__editor_plugin_screen__":"Script" }
+__meta__ = { "__editor_plugin_screen__":"2D" }
 
 [node name="main" parent="." instance=ExtResource( 1 )]
-
-transform/pos = Vector2( 10, 39 )
 
 [node name="pathNotice" type="AcceptDialog" parent="."]
 

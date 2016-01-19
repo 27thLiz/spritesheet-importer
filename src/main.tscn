@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=1]
+[gd_scene load_steps=7 format=1]
 
 [ext_resource path="res://main.gd" type="Script" id=1]
 
@@ -20,6 +20,10 @@ script/source = "\nextends FileDialog\n\n# member variables here, example:\n# va
 
 script/source = "\nextends FileDialog\n\nfunc _ready():\n\tset_mode(MODE_OPEN_FILE)\n\n\n\n"
 
+[sub_resource type="GDScript" id=5]
+
+script/source = "\nextends MenuButton\n\n# member variables here, example:\n# var a=2\n# var b=\"textvar\"\n\nfunc _ready():\n\t# Initialization here\n\tget_popup().add_item(\"Binary (*.atex)\" , 0)\n\tget_popup().add_item(\"Text (*.tres)\" , 1)\n\tget_popup().add_item(\"XML (*.xatex)\" , 2)\n\tget_popup().connect(\"item_pressed\", get_node(\"..\"), \"_on_format_changed\")\n\n"
+
 [node name="Node2D" type="Node2D"]
 
 script/script = ExtResource( 1 )
@@ -33,9 +37,9 @@ material/material = SubResource( 2 )
 transform/pos = Vector2( 22, 123 )
 centered = false
 
-[node name="StartPos" type="Position2D" parent="."]
+[node name="StartPos" type="Node2D" parent="."]
 
-transform/pos = Vector2( 22, 123 )
+transform/pos = Vector2( 22, 133 )
 
 [node name="rows" type="SpinBox" parent="."]
 
@@ -325,14 +329,13 @@ script/script = SubResource( 4 )
 
 visibility/visible = false
 margin/left = 465.0
-margin/top = 24.0
-margin/right = 611.0
-margin/bottom = 111.0
+margin/top = 44.0
+margin/right = 645.0
+margin/bottom = 131.0
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
 size_flags/vertical = 2
-__meta__ = { "_editor_collapsed":true }
 
 [node name="Label" type="Label" parent="CurrentTilePanel"]
 
@@ -349,9 +352,9 @@ max_lines_visible = -1
 [node name="TileName" type="TextEdit" parent="CurrentTilePanel"]
 
 margin/left = 41.0
-margin/top = 23.0
-margin/right = 145.0
-margin/bottom = 46.0
+margin/top = 22.0
+margin/right = 175.0
+margin/bottom = 49.0
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -397,11 +400,44 @@ percent_visible = 1.0
 lines_skipped = 0
 max_lines_visible = -1
 
+[node name="type_label" type="Label" parent="."]
+
+margin/left = 466.0
+margin/top = 12.0
+margin/right = 506.0
+margin/bottom = 25.0
+focus/ignore_mouse = true
+focus/stop_mouse = true
+size_flags/horizontal = 2
+text = "Type:"
+percent_visible = 1.0
+lines_skipped = 0
+max_lines_visible = -1
+
+[node name="format" type="MenuButton" parent="."]
+
+margin/left = 517.0
+margin/top = 8.0
+margin/right = 611.0
+margin/bottom = 27.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+toggle_mode = false
+click_on_press = true
+text = "Binary (*.atex)"
+flat = false
+items = [  ]
+script/script = SubResource( 5 )
+
 [connection signal="value_changed" from="rows" to="." method="_on_rows_value_changed"]
 
 [connection signal="value_changed" from="columns" to="." method="_on_columns_value_changed"]
 
 [connection signal="pressed" from="path_button" to="." method="_on_path_button_pressed"]
+
+[connection signal="dir_selected" from="FileDialog" to="." method="_on_FileDialog_dir_selected"]
 
 [connection signal="confirmed" from="FileDialog" to="." method="_on_FileDialog_confirmed"]
 
@@ -414,6 +450,8 @@ max_lines_visible = -1
 [connection signal="value_changed" from="margin" to="." method="_on_margin_value_changed"]
 
 [connection signal="pressed" from="load_button" to="." method="_on_load_pressed"]
+
+[connection signal="file_selected" from="TilesetDialog" to="." method="_on_TilesetDialog_file_selected"]
 
 [connection signal="confirmed" from="TilesetDialog" to="." method="_on_TilesetDialog_confirmed"]
 

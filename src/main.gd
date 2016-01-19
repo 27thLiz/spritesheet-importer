@@ -2,6 +2,9 @@ tool
 extends Node2D
 
 const WHITE = Color(1, 1, 1)
+const FORMAT_BINARY = 0
+const FORMAT_TEXT = 1
+const FORMAT_XML = 2
 
 onready var start = get_node("StartPos")
 onready var startpos = start.get_pos()
@@ -23,6 +26,7 @@ var currentSelection
 var tiles = {}
 var dir
 var base_name = ""
+var format_str = ".atex"
 var line_width = 1.0
 func _ready():
 	TilesetDiag.set_mode(TilesetDiag.MODE_OPEN_FILE)
@@ -41,7 +45,10 @@ func deselect():
 	get_node("CurrentTilePanel").hide()
 
 func import():
+	print("pressed ok")
 	if (dir == null or dir == ""):
+		get_node("../pathNotice").show()
+		get_node("..").show()
 		return
 	for tile in start.get_children():
 		if tile.skip:
@@ -50,7 +57,7 @@ func import():
 		tex.set_name(tile.name)
 		tex.set_atlas(tileset)
 		tex.set_region(tile.rect)
-		ResourceSaver.save(dir + "/" + tile.name + ".atex", tex)
+		ResourceSaver.save(dir + "/" + tile.name + format_str, tex)
 		
 
 func deleteTiles():
@@ -81,7 +88,7 @@ func _on_path_button_pressed():
 
 func _on_FileDialog_confirmed():
 	dir = get_node("FileDialog").get_current_dir()
-	get_node("Label").set_text("Path: " + dir)
+
 
 func update_vars():
 	size_x = columns * tilesize_x
@@ -116,20 +123,30 @@ func _on_margin_value_changed( value ):
 func _on_load_pressed():
 	get_node("TilesetDialog").show()
 
-func _on_TilesetDialog_confirmed():
-	var filestr = get_node("TilesetDialog").get_current_file()
-	tileset = load(filestr)
-	base_name = filestr.split(".")[0]
-	print(base_name)
-	makeTiles()
-	have_tileset = true
-
-
 func _on_import_toggled( pressed ):
 	if (currentSelection != null):
 		currentSelection.skip = !pressed
 
-
 func _on_TileName_text_changed():
 	if currentSelection != null:
 		currentSelection.name = get_node("CurrentTilePanel/TileName").get_text()
+		
+func _on_format_changed(format):
+	if format == FORMAT_BINARY:
+		format_str = ".atex"
+	elif format == FORMAT_TEXT:
+		format_str = ".tres"
+	elif format == FORMAT_XML:
+		format_str = ".xatex"
+	get_node("format").set_text(get_node("format").get_popup().get_item_text(format))
+
+func _on_FileDialog_dir_selected( Dir ):
+	dir = Dir
+	get_node("Label").set_text("Path: " + dir)
+
+func _on_TilesetDialog_file_selected( path ):
+	tileset = load(path)
+	var entries = path.split("/")
+	base_name = entries[entries.size() - 1].split(".")[0]
+	makeTiles()
+	have_tileset = true
