@@ -1,12 +1,14 @@
 [gd_scene load_steps=2 format=1]
 
-[ext_resource path="res://tile.gd" type="Script" id=1]
+[sub_resource type="GDScript" id=1]
+
+script/source = "extends Sprite\nvar rect setget rectchanged\nvar name\nvar skip = false\nvar line_width = 1.0\nvar mouseover = false\nvar selected = false\nvar clicked = false\n\nfunc rectchanged(value):\n\trect = value\n\tset_region_rect(rect)\n\tset_fixed_process(true)\n\tset_process_input(true)\n\nfunc _input(event):\n\tif event.type == InputEvent.MOUSE_BUTTON and !event.is_pressed():\n\t\tclicked = true\n\nfunc deselect():\n\tselected = false\n\nfunc _fixed_process(delta):\n\tif clicked:\n\t\tclicked = false\n\t\tif mouseover:\n\t\t\tselected = !selected\n\t\t\tif (selected):\n\t\t\t\tget_node(\"../..\").requestSelection(self)\n\t\t\telse:\n\t\t\t\tget_node(\"../..\").deselect()\n\tupdate()\n\nfunc _draw():\n\tdraw_box(Color(1, 1, 1))\n\tif selected:\n\t\tdraw_box(Color(0, 0, 1))\n\tif mouseover:\n\t\tdraw_box(Color(1, 0 , 0))\nfunc draw_box(color):\n\tvar x = rect.size.x\n\tvar y = rect.size.y\n\tvar upright = Vector2(x, 0)\n\tvar downleft = Vector2(0, y)\n\tvar downright = Vector2(x, y)\n\n\tdraw_line(Vector2(), downleft, color, line_width)\n\tdraw_line(Vector2(), upright, color, line_width)\n\tdraw_line(downleft, downright, color, line_width)\n\tdraw_line(upright, downright, color, line_width)\n\nfunc _on_Area2D_mouse_enter():\n\tmouseover = true\n\nfunc _on_Area2D_mouse_exit():\n\tmouseover = false"
 
 [node name="Sprite" type="Sprite"]
 
 centered = false
 region = true
-script/script = ExtResource( 1 )
+script/script = SubResource( 1 )
 __meta__ = { "__editor_plugin_screen__":"Script" }
 
 [node name="Area2D" type="Area2D" parent="."]

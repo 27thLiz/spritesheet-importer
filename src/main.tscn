@@ -1,45 +1,30 @@
-[gd_scene load_steps=7 format=1]
+[gd_scene load_steps=5 format=1]
 
-[ext_resource path="res://main.gd" type="Script" id=1]
+[sub_resource type="GDScript" id=1]
 
-[sub_resource type="CanvasItemShaderGraph" id=1]
+script/source = "tool\nextends Node2D\n\nclass Tile:\n\textends Sprite\n\tvar rect = Rect2() setget rectchanged\n\tvar name\n\tvar skip = false\n\tvar line_width = 1.0\n\tvar mouseover = false\n\tvar selected = false\n\tvar clicked = false\n\t\n\tfunc _enter_tree():\n\t\tset_centered(false)\n\t\tset_region(true)\n\t\tvar area = Area2D.new()\n\t\tarea.set_name(\"Area2D\")\n\t\tadd_child(area)\n\t\tarea.connect(\"mouse_enter\", self, \"_on_Area2D_mouse_enter\")\n\t\tarea.connect(\"mouse_exit\", self, \"_on_Area2D_mouse_exit\")\n\t\t\n\n\tfunc rectchanged(value):\n\t\trect = value\n\t\tset_region_rect(rect)\n\t\tset_fixed_process(true)\n\t\tset_process_input(true)\n\t\t\n\t\n\tfunc _input(event):\n\t\tif event.type == InputEvent.MOUSE_BUTTON and !event.is_pressed():\n\t\t\tclicked = true\n\t\n\tfunc deselect():\n\t\tselected = false\n\t\n\tfunc _fixed_process(delta):\n\t\tif clicked:\n\t\t\tclicked = false\n\t\t\tif mouseover:\n\t\t\t\tselected = !selected\n\t\t\t\tif (selected):\n\t\t\t\t\tget_node(\"../..\").requestSelection(self)\n\t\t\t\telse:\n\t\t\t\t\tget_node(\"../..\").deselect()\n\t\tupdate()\n\t\n\tfunc _draw():\n\t\tdraw_box(Color(1, 1, 1))\n\t\tif selected:\n\t\t\tdraw_box(Color(0, 0, 1))\n\t\tif mouseover:\n\t\t\tdraw_box(Color(1, 0 , 0))\n\tfunc draw_box(color):\n\t\tvar x = rect.size.x\n\t\tvar y = rect.size.y\n\t\tvar upright = Vector2(x, 0)\n\t\tvar downleft = Vector2(0, y)\n\t\tvar downright = Vector2(x, y)\n\t\n\t\tdraw_line(Vector2(), downleft, color, line_width)\n\t\tdraw_line(Vector2(), upright, color, line_width)\n\t\tdraw_line(downleft, downright, color, line_width)\n\t\tdraw_line(upright, downright, color, line_width)\n\t\n\tfunc _on_Area2D_mouse_enter():\n\t\tmouseover = true\n\t\n\tfunc _on_Area2D_mouse_exit():\n\t\tmouseover = false\n\nconst WHITE = Color(1, 1, 1)\nconst FORMAT_BINARY = 0\nconst FORMAT_TEXT = 1\nconst FORMAT_XML = 2\n\nonready var start = get_node(\"StartPos\")\nonready var startpos = start.get_pos()\nonready var rect = Rect2(startpos, Vector2(size_x, size_y))\nonready var TilesetDiag = get_node(\"TilesetDialog\")\nonready var PathDiag = get_node(\"FileDialog\")\nvar tileset\nvar tilesize_x = 32\nvar tilesize_y = 32\nvar rows = 2\nvar columns = 2\nvar spacing = 0\nvar margin = 0\nvar size_x = columns * tilesize_x\nvar size_y = rows * tilesize_y\nvar have_tileset = false\nvar currentSelection\nvar tiles = {}\nvar dir\nvar base_name = \"\"\nvar format_str = \".atex\"\nvar line_width = 1.0\nvar posx = 0\nvar posy = 0\nfunc _ready():\n\tTilesetDiag.set_mode(TilesetDiag.MODE_OPEN_FILE)\n\tpass\n\nfunc requestSelection(tile):\n\tif currentSelection != null:\n\t\tcurrentSelection.deselect()\n\tcurrentSelection = tile\n\tget_node(\"CurrentTilePanel\").show()\n\tget_node(\"CurrentTilePanel/TileName\").set_text(tile.name)\n\tget_node(\"CurrentTilePanel/TileImport\").set_pressed(!tile.skip)\n\nfunc deselect():\n\tcurrentSelection = null\n\tget_node(\"CurrentTilePanel\").hide()\n\nfunc import():\n\tprint(\"pressed ok\")\n\tif (dir == null or dir == \"\"):\n\t\tget_node(\"../pathNotice\").show()\n\t\tget_node(\"..\").show()\n\t\treturn\n\tfor tile in start.get_children():\n\t\tif tile.skip:\n\t\t\tcontinue\n\t\tvar tex = AtlasTexture.new()\n\t\ttex.set_name(tile.name)\n\t\ttex.set_atlas(tileset)\n\t\ttex.set_region(tile.rect)\n\t\tResourceSaver.save(dir + \"/\" + tile.name + format_str, tex)\n\t\t\n\nfunc deleteTiles():\n\tfor tile in start.get_children():\n\t\ttile.queue_free()\n\tcurrentSelection = null\n\nfunc makeTiles():\n\tvar count = 0\n\tdeleteTiles()\n\tfor x in range(columns):\n\t\tfor y in range(rows):\n\t\t\tvar rect = Rect2(Vector2(x * tilesize_x + x * spacing + margin + posx * tilesize_x, y * tilesize_y + y * spacing + margin + posy * tilesize_y), Vector2(tilesize_x, tilesize_y))\n\t\t\tvar tile = Tile.new()\n\t\t\tvar shape = RectangleShape2D.new()\n\t\t\tshape.set_extents(Vector2(tilesize_x/2, tilesize_y/2))\n\t\t\ttile.set_texture(tileset)\n\t\t\tstart.add_child(tile)\n\t\t\ttile.get_node(\"Area2D\").add_shape(shape)\n\t\t\ttile.get_node(\"Area2D\").set_pos(Vector2(tilesize_x/2, tilesize_y/2))\n\t\t\ttile.rect = rect\n\t\t\ttile.set_pos(Vector2(x * tilesize_x + x, y * tilesize_y + y))\n\t\t\ttile.name = base_name + \"_\" + str(count)\n\t\t\ttile.skip = false\n\t\t\tcount += 1\n\nfunc _on_path_button_pressed():\n\tget_node(\"FileDialog\").show()\n\nfunc _on_FileDialog_confirmed():\n\tdir = get_node(\"FileDialog\").get_current_dir()\n\n\nfunc update_vars():\n\tsize_x = columns * tilesize_x\n\tsize_y = rows * tilesize_y\n\trect = Rect2(startpos, Vector2(size_x, size_y))\n\tmakeTiles()\n\nfunc _on_tilesize_x_value_changed( value ):\n\ttilesize_x = int(value)\n\tupdate_vars()\n\nfunc _on_rows_value_changed( value ):\n\trows = int(value)\n\tupdate_vars()\n\nfunc _on_columns_value_changed( value ):\n\tcolumns = int(value)\n\tupdate_vars()\n\nfunc _on_tilesize_y_value_changed( value ):\n\ttilesize_y = int(value)\n\tupdate_vars()\n\nfunc _on_spacing_value_changed( value ):\n\tspacing = int(value)\n\tupdate_vars()\n\nfunc _on_margin_value_changed( value ):\n\tmargin = int(value)\n\tupdate_vars()\n\nfunc _on_load_pressed():\n\tget_node(\"TilesetDialog\").show()\n\nfunc _on_import_toggled( pressed ):\n\tif (currentSelection != null):\n\t\tcurrentSelection.skip = !pressed\n\nfunc _on_TileName_text_changed():\n\tif currentSelection != null:\n\t\tcurrentSelection.name = get_node(\"CurrentTilePanel/TileName\").get_text()\n\t\t\nfunc _on_format_changed(format):\n\tif format == FORMAT_BINARY:\n\t\tformat_str = \".atex\"\n\telif format == FORMAT_TEXT:\n\t\tformat_str = \".tres\"\n\telif format == FORMAT_XML:\n\t\tformat_str = \".xatex\"\n\tget_node(\"format\").set_text(get_node(\"format\").get_popup().get_item_text(format))\n\nfunc _on_FileDialog_dir_selected( Dir ):\n\tdir = Dir\n\tget_node(\"Label\").set_text(\"Path: \" + dir)\n\nfunc _on_TilesetDialog_file_selected( path ):\n\tprint(\"selected oida\")\n\ttileset = load(path)\n\tvar entries = path.split(\"/\")\n\tbase_name = entries[entries.size() - 1].split(\".\")[0]\n\tmakeTiles()\n\thave_tileset = true\n\nfunc pos_x_value_changed( value ):\n\tposx = int(value)\n\tmakeTiles()\n\nfunc pos_y_value_changed( value ):\n\tposy = int(value)\n\tmakeTiles()\n"
 
-_code = { "fragment":"", "fragment_ofs":0, "light":"", "light_ofs":0, "vertex":"", "vertex_ofs":0 }
-_data = { "shaders":[ [ 0, 33, Vector2( 437, 10 ), null, null, [  ] ], [ 0, 33, Vector2( 289, 38 ), null, null, [  ], 1, 0, Vector2( 113, 31 ), null, null, [  ] ], [ 0, 33, Vector2( 250, 20 ), null, null, [  ] ] ] }
-
-[sub_resource type="CanvasItemMaterial" id=2]
-
-shader/shader = SubResource( 1 )
-shader/shading_mode = 0
-
-[sub_resource type="GDScript" id=3]
+[sub_resource type="GDScript" id=2]
 
 script/source = "\nextends FileDialog\n\n# member variables here, example:\n# var a=2\n# var b=\"textvar\"\n\nfunc _ready():\n\t# Initialization here\n\tset_mode(MODE_OPEN_DIR)\n\tpass\n\n\n"
 
-[sub_resource type="GDScript" id=4]
+[sub_resource type="GDScript" id=3]
 
 script/source = "\nextends FileDialog\n\nfunc _ready():\n\tset_mode(MODE_OPEN_FILE)\n\n\n\n"
 
-[sub_resource type="GDScript" id=5]
+[sub_resource type="GDScript" id=4]
 
-script/source = "\nextends MenuButton\n\n# member variables here, example:\n# var a=2\n# var b=\"textvar\"\n\nfunc _ready():\n\t# Initialization here\n\tget_popup().add_item(\"Binary (*.atex)\" , 0)\n\tget_popup().add_item(\"Text (*.tres)\" , 1)\n\tget_popup().add_item(\"XML (*.xatex)\" , 2)\n\tget_popup().connect(\"item_pressed\", get_node(\"..\"), \"_on_format_changed\")\n\n"
+script/source = "\nextends MenuButton\n\nfunc _ready():\n\t# Initialization here\n\tget_popup().add_item(\"Binary (*.atex)\" , 0)\n\tget_popup().add_item(\"Text (*.tres)\" , 1)\n\tget_popup().add_item(\"XML (*.xatex)\" , 2)\n\tget_popup().connect(\"item_pressed\", get_node(\"..\"), \"_on_format_changed\")\n\n"
 
-[node name="Node2D" type="Node2D"]
+[node name="main" type="Node2D"]
 
-script/script = ExtResource( 1 )
-__meta__ = { "__editor_plugin_screen__":"2D", "_edit_lock_":true }
-
-[node name="View" type="Sprite" parent="."]
-
-visibility/visible = false
-visibility/behind_parent = true
-material/material = SubResource( 2 )
-transform/pos = Vector2( 22, 123 )
-centered = false
+script/script = SubResource( 1 )
+__meta__ = { "__editor_plugin_screen__":"Script", "_edit_lock_":true }
 
 [node name="StartPos" type="Node2D" parent="."]
 
 transform/pos = Vector2( 22, 133 )
+transform/scale = Vector2( 2, 2 )
 
 [node name="rows" type="SpinBox" parent="."]
 
@@ -153,7 +138,7 @@ size_flags/vertical = 2
 popup/exclusive = false
 window/title = "Choose a path"
 dialog/hide_on_ok = true
-script/script = SubResource( 3 )
+script/script = SubResource( 2 )
 
 [node name="tilesize_x" type="SpinBox" parent="."]
 
@@ -323,15 +308,14 @@ size_flags/vertical = 2
 popup/exclusive = false
 window/title = "Open a File"
 dialog/hide_on_ok = false
-script/script = SubResource( 4 )
+script/script = SubResource( 3 )
 
 [node name="CurrentTilePanel" type="Panel" parent="."]
 
-visibility/visible = false
-margin/left = 465.0
-margin/top = 44.0
-margin/right = 645.0
-margin/bottom = 131.0
+margin/left = 562.0
+margin/top = 46.0
+margin/right = 742.0
+margin/bottom = 133.0
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -402,10 +386,10 @@ max_lines_visible = -1
 
 [node name="type_label" type="Label" parent="."]
 
-margin/left = 466.0
-margin/top = 12.0
-margin/right = 506.0
-margin/bottom = 25.0
+margin/left = 575.0
+margin/top = 17.0
+margin/right = 615.0
+margin/bottom = 30.0
 focus/ignore_mouse = true
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -416,10 +400,10 @@ max_lines_visible = -1
 
 [node name="format" type="MenuButton" parent="."]
 
-margin/left = 517.0
-margin/top = 8.0
-margin/right = 611.0
-margin/bottom = 27.0
+margin/left = 626.0
+margin/top = 13.0
+margin/right = 720.0
+margin/bottom = 32.0
 focus/ignore_mouse = false
 focus/stop_mouse = true
 size_flags/horizontal = 2
@@ -429,7 +413,49 @@ click_on_press = true
 text = "Binary (*.atex)"
 flat = false
 items = [  ]
-script/script = SubResource( 5 )
+script/script = SubResource( 4 )
+
+[node name="pos_x" type="SpinBox" parent="."]
+
+margin/left = 468.0
+margin/top = 38.0
+margin/right = 530.0
+margin/bottom = 61.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+range/min = 0.0
+range/max = 1024.0
+range/step = 1.0
+range/page = 0.0
+range/value = 0.0
+range/exp_edit = false
+range/rounded = false
+editable = true
+prefix = ""
+suffix = ""
+
+[node name="pos_y" type="SpinBox" parent="."]
+
+margin/left = 465.0
+margin/top = 80.0
+margin/right = 527.0
+margin/bottom = 103.0
+focus/ignore_mouse = false
+focus/stop_mouse = true
+size_flags/horizontal = 2
+size_flags/vertical = 2
+range/min = 0.0
+range/max = 1024.0
+range/step = 1.0
+range/page = 0.0
+range/value = 0.0
+range/exp_edit = false
+range/rounded = false
+editable = true
+prefix = ""
+suffix = ""
 
 [connection signal="value_changed" from="rows" to="." method="_on_rows_value_changed"]
 
@@ -458,5 +484,9 @@ script/script = SubResource( 5 )
 [connection signal="text_changed" from="CurrentTilePanel/TileName" to="." method="_on_TileName_text_changed"]
 
 [connection signal="toggled" from="CurrentTilePanel/TileImport" to="." method="_on_import_toggled"]
+
+[connection signal="value_changed" from="pos_x" to="." method="pos_x_value_changed"]
+
+[connection signal="value_changed" from="pos_y" to="." method="pos_y_value_changed"]
 
 
